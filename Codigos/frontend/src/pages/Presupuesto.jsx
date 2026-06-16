@@ -94,7 +94,9 @@ export default function Presupuesto() {
     for (const row of (bySection[sec] || [])) {
       if (row.is_subtotal) {
         totalActualIngresos += rowYTD(row.actual, months)
-        totalBudgetIngresos += rowYTD(row.budget, months)
+        const bRaw = rowYTD(row.budget, months)
+        const bChildren = (bySection[sec] || []).filter(c => !c.is_subtotal && c.parent === row.concepto).reduce((s, c) => s + rowYTD(c.budget, months), 0)
+        totalBudgetIngresos += bRaw !== 0 ? bRaw : bChildren
       }
     }
   }
@@ -102,7 +104,9 @@ export default function Presupuesto() {
     for (const row of (bySection[sec] || [])) {
       if (row.is_subtotal) {
         totalActualGastos += rowYTD(row.actual, months)
-        totalBudgetGastos += rowYTD(row.budget, months)
+        const bRaw = rowYTD(row.budget, months)
+        const bChildren = (bySection[sec] || []).filter(c => !c.is_subtotal && c.parent === row.concepto).reduce((s, c) => s + rowYTD(c.budget, months), 0)
+        totalBudgetGastos += bRaw !== 0 ? bRaw : bChildren
       }
     }
   }
@@ -155,7 +159,10 @@ export default function Presupuesto() {
             ...(!isCollapsed ? subtotals.flatMap(sub => {
               const subChildren = children.filter(c => c.parent === sub.concepto)
               const aYTD = rowYTD(sub.actual, months)
-              const bYTD = rowYTD(sub.budget, months)
+              // Budget subtotals may be 0 in Excel — sum children instead
+              const bYTDraw = rowYTD(sub.budget, months)
+              const bYTDfromChildren = subChildren.reduce((s, c) => s + rowYTD(c.budget, months), 0)
+              const bYTD = bYTDraw !== 0 ? bYTDraw : bYTDfromChildren
               const { v, pct } = varCell(aYTD, bYTD)
               return [
                 <tr key={sub.concepto} className={`border-b border-slate-200 ${cfg.subtotal}`}>
