@@ -105,7 +105,7 @@ export default function People() {
               <p className={`text-xs font-semibold uppercase tracking-wide opacity-80 ${ajuste > 0 ? 'text-orange-600' : 'text-emerald-600'}`}>Ajuste Honorarios</p>
               <p className={`text-2xl font-bold mt-1 tabular-nums ${ajuste > 0 ? 'text-orange-700' : 'text-emerald-700'}`}>{ajuste > 0 ? CLP(ajuste) : '—'}</p>
               <p className={`text-xs mt-1 ${ajuste > 0 ? 'text-orange-400' : 'text-emerald-400'}`}>
-                {ajuste > 0 ? 'Diferencia vs EERR' : 'Planilla cuadra con EERR'}
+                {ajuste > 0 ? 'Honorarios ajustado a sueldos' : 'Planilla cuadra con EERR'}
               </p>
             </div>
           </div>
