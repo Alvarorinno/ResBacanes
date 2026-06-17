@@ -46,26 +46,28 @@ router.get('/', (req, res) => {
     : [];
 
   // Build map: month -> { ventas, costos }
+  const INGRESO_SECTIONS = ['ventas', 'otros_ingresos'];
+  const GASTO_SECTIONS   = ['gastos_operacionales', 'remuneraciones', 'administracion', 'gastos_financieros'];
+
+  function classify(section) {
+    const s = (section || '').toLowerCase();
+    if (INGRESO_SECTIONS.includes(s)) return 'ventas';
+    if (GASTO_SECTIONS.includes(s))   return 'costos';
+    return null;
+  }
+
   const actualMap = {};
   for (const r of actualRows) {
     if (!actualMap[r.month_name]) actualMap[r.month_name] = { ventas: 0, costos: 0 };
-    const s = (r.section || '').toUpperCase();
-    if (s.includes('INGRESO') || s.includes('VENTA')) {
-      actualMap[r.month_name].ventas += r.total;
-    } else if (s.includes('GASTO') || s.includes('COSTO') || s.includes('REMUNERACION') || s.includes('HONORARIO')) {
-      actualMap[r.month_name].costos += r.total;
-    }
+    const tipo = classify(r.section);
+    if (tipo) actualMap[r.month_name][tipo] += r.total;
   }
 
   const budgetMap = {};
   for (const r of budgetRows) {
     if (!budgetMap[r.month_name]) budgetMap[r.month_name] = { ventas: 0, costos: 0 };
-    const s = (r.section || '').toUpperCase();
-    if (s.includes('INGRESO') || s.includes('VENTA')) {
-      budgetMap[r.month_name].ventas += r.total;
-    } else if (s.includes('GASTO') || s.includes('COSTO') || s.includes('REMUNERACION') || s.includes('HONORARIO')) {
-      budgetMap[r.month_name].costos += r.total;
-    }
+    const tipo = classify(r.section);
+    if (tipo) budgetMap[r.month_name][tipo] += r.total;
   }
 
   const actualMonths = new Set(Object.keys(actualMap));
