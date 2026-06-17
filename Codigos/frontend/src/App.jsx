@@ -11,6 +11,7 @@ import Honorarios from './pages/Honorarios'
 import CargaDatos from './pages/CargaDatos'
 import Usuarios from './pages/Usuarios'
 import People from './pages/People'
+import FlujoCaja from './pages/FlujoCaja'
 
 function ProtectedRoute({ children, roles = null }) {
   const { user, loading } = useAuth()
@@ -33,6 +34,7 @@ function AppRoutes() {
         <Route path="eerr-resumen" element={<EERRResumen />} />
         <Route path="eerr-detalle" element={<EERRDetalle />} />
         <Route path="people" element={<People />} />
+        <Route path="flujo-caja" element={<FlujoCaja />} />
         <Route path="presupuesto" element={<ProtectedRoute roles={['admin']}><Presupuesto /></ProtectedRoute>} />
         <Route path="proveedores" element={<ProtectedRoute roles={['admin']}><Proveedores /></ProtectedRoute>} />
         <Route path="honorarios" element={<ProtectedRoute roles={['admin']}><Honorarios /></ProtectedRoute>} />

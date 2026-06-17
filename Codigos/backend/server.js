@@ -25,6 +25,7 @@ app.use('/api/proveedores', authMiddleware, require('./routes/proveedores'));
 app.use('/api/honorarios', authMiddleware, require('./routes/honorarios'));
 app.use('/api/presupuesto', authMiddleware, require('./routes/presupuesto'));
 app.use('/api/people', authMiddleware, require('./routes/people'));
+app.use('/api/flujo-caja', authMiddleware, require('./routes/flujocaja'));
 
 // Serve frontend build in production
 const frontendBuild = fs.existsSync(path.join(__dirname, 'dist'))
